@@ -1,80 +1,52 @@
-from __future__ import unicode_literals
-
-import hashlib
-import os.path
-import urllib
-
-from django.conf import settings
 from django.db import models
-from django.db.models.signals import post_save
+from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.contrib import admin
+
 User = settings.AUTH_USER_MODEL
 
 
 class Employee(models.Model):
-	GENDER_CHOICES = ('M', 'Male'), ('F', 'Female')
-	user = models.OneToOneField(User, related_name='+')
-	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	RANK_CHOICES = ('JR','Junior'),('SP','Superior'),('HR','Human Resource')
+	rank = models.CharField(max_length=2, default='JR', choices=RANK_CHOICES)
 
 	def __str__(self):
-		return ('%s (%s)' % (self.user.username, self.gender))
+		return ('{0} -- {1}'.format(self.rank, self.user.username))
 
-admin.site.register(Employee)
 
-class Superior(models.Model):
-	id = models.CharField(max_length=12, primary_key=True, unique=True)
-	employee = models.ForeignKey(Employee, related_name='+')
+class Appraisal(models.Model):
+	employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee')
+	superior = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='superior')
+	# question = models.ManyToManyField(Question)
+	total = models.PositiveIntegerField()
+	created = models.DateField(auto_now_add=True, auto_now=False)
 
 	def __str__(self):
-		return self.id
+		return self.employee.user.username + ' ' + str(self.created)
+
+	def get_absolute_url(self):
+		return reverse('appraisal:appraisal_detail', kwargs={'pk': self.pk})
+
 
 class Question(models.Model):
-	appraisal = models.ForeignKey('Appraisal', on_delete=models.CASCADE, related_name='appraisal')
+	appraisal = models.ForeignKey(Appraisal, on_delete=models.CASCADE, null=True, blank=True)
 	title = models.CharField(max_length=300)
 	description = models.CharField(max_length=300)
-	ONE = '1'
-	TWO = '2'
-	THREE = '3'
-	FOUR = '4'
-	FIVE = '5'
-	RANK = (
-		(ONE, '1'),
-		(TWO, '2'),
-		(THREE, '3'),
-		(FOUR, '4'),
-		(FIVE, '5'),
-	)
-	rating = models.CharField(max_length=10, choices=RANK, default=ONE)
-	is_active = models.BooleanField(default=True)
+	ONE = 1
+	TWO = 2
+	THREE = 3
+	FOUR = 4
+	FIVE = 5
+	RANK =(ONE, 1),(TWO, 2),(THREE, 3),(FOUR, 4),(FIVE, 5),
+
+	rank = models.IntegerField(choices=RANK, default=ONE)
+	created = models.DateField(auto_now_add=True)
 
 
 	def __str__(self):
 		return self.title
 
 	def get_absolute_url(self):
-		return reverse('production:supply-detail', kwargs={'pk': self.pk})
+		return reverse('appraisal:question_detail', kwargs={'pk': self.pk})
 
 
-class Appraisal(models.Model):
-	employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee')
-	superior = models.ForeignKey(Superior, on_delete=models.CASCADE, related_name='superior')
-	question = models.ForeignKey(Question, related_name='question')
-	total = models.PositiveIntegerField()
-	created = models.DateField(auto_now_add=True, auto_now=False)
-	ONE = '1'
-	TWO = '2'
-	THREE = '3'
-	FOUR = '4'
-	FIVE = '5'
-	RANK = (
-		(ONE, '1'),
-		(TWO, '2'),
-		(THREE, '3'),
-		(FOUR, '4'),
-		(FIVE, '5'),
-	)
-	rating = models.CharField(max_length=10, choices=RANK, default=ONE)
-
-	def __str__(self):
-		return str(self.employee)

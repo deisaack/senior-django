@@ -4,9 +4,8 @@ from django.contrib import admin
 from .models import (
 	Question,
 	Appraisal,
-	Superior
+	Employee,
 )
-
 
 class QuestionInline(admin.TabularInline):
 	model = Question
@@ -24,8 +23,8 @@ class AppraisalAdmin(admin.ModelAdmin):
 		model = Appraisal
 
 
-# admin.site.register(Appraisal, AppraisalAdmin)
-admin.site.register(Appraisal)
-admin.site.register(Question)
-admin.site.register(Superior)
+admin.site.register(Appraisal, AppraisalAdmin)
 
+admin.site.register(Employee)
+
+admin.site.register(Question)

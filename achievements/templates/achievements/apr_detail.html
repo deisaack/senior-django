@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body style="margin-left: 200px;">
+<h1>{{ object.employee.user.username }}</h1>
+<p>Appraisal done on {{ object.created }}</p>
+
+    <table border="1">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Question</th>
+        <th>Description</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for qn in question_list %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+            <td><a href="{{ qn.get_absolute_url }}">{{ qn.title }}</a></td>
+          <td>{{ qn.description }}</td>
+          <td>{{ qn.rank }}</td>
+        </tr>
+        {% if forloop.last %}
+          <tr>
+            <td colspan="3">
+              TOTAL
+            </td>
+          <td>{{ object.total }}</td>
+          </tr>
+        {% endif %}
+      {% empty %}
+        <tr>
+          <td colspan="3">No queations</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

@@ -12,3 +12,14 @@ class ReviewForm(forms.ModelForm):
 	class Meta:
 		model = Appraisal
 		fields = ['employee']
+
+
+class QuestionForm(forms.ModelForm):
+	description = forms.CharField(
+		widget=forms.TextInput(attrs={'class': 'form-control'}),
+		max_length=250,
+		required=False)
+
+	class Meta:
+		model = Question
+		fields = ['appraisal', 'title', 'description', 'rank']

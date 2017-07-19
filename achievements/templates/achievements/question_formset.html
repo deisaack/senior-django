@@ -7,7 +7,18 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-<h1>{{ question }}</h1>
-<p>{{ question.description }}</p>
+<body>
+<form method="post" action="">
+    {{ formset.management_form }}
+{% csrf_token %}
+    <table>
+        {% for form in formset %}
+        {{ form }}
+        {% endfor %}
+    </table>
+<button type="submit">Submit</button>
+
+</form>
+
 </body>
 </html>

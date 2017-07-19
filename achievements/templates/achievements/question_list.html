@@ -7,7 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-<h1>{{ question }}</h1>
-<p>{{ question.description }}</p>
+<body>
+<h2>{{ object }}</h2>
+{% for qn in question_list %}
+    <h5><a href="{{ qn.get_absolute_url }}">{{ qn }}</a></h5>
+{% endfor %}
+
+<h4>hello world!!</h4>
 </body>
 </html>

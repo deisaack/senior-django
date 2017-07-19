@@ -7,7 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-<h1>{{ question }}</h1>
-<p>{{ question.description }}</p>
+<body>
+<form action="" method="post" role="form">
+    {% csrf_token %}
+    {{ form.as_p }}
+  <button type="submit" class="btn waves-effect waves-light light-green darken-4">Submit</button>
+
+</form>
 </body>
 </html>
