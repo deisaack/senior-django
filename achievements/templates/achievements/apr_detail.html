@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -43,5 +44,12 @@
       {% endfor %}
     </tbody>
   </table>
+<form data-parsley-validate action="{% url 'appraisal:qn_fm' %}" method="post" role="form">
+    {% csrf_token %}
+    {{ form.as_p }}
+  <button type="submit" class="btn waves-effect waves-light light-blue darken-4">Submit</button>
+</form>
+<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'js/parsley.min.js' %}"></script>
 </body>
 </html>

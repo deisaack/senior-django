@@ -1,9 +1,39 @@
 from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.contrib import admin
 
 User = settings.AUTH_USER_MODEL
 
+
+class Profile(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    created_date = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+         return ('%s %s' % (self.first_name , self.last_name))
+
+
+class FamilyMember(models.Model):
+    profile = models.ForeignKey(Profile)
+    name = models.CharField(max_length=100)
+    relationship = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.profile.first_name
+
+class UserLink(models.Model):
+	anchor = models.CharField(max_length=10000, null=True, blank=True)
+	url = models.CharField(max_length=10000, null=True, blank=True)
+	user = models.ForeignKey(User, null=True, blank=True)
+
+	def __str__(self):
+		return self.anchor
+
+admin.site.register(Profile)
+admin.site.register(FamilyMember)
+admin.site.register(UserLink)
 
 class Employee(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
